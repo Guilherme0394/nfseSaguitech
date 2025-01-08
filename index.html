@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emissão de Nota Fiscal de Serviço</title>
+</head>
+<body>
+  <h1>Nota Fiscal de Serviço (NFS-e)</h1>
+  <form id="nfseForm">
+    <label>Valor da Venda: <input type="number" id="valorVenda" step="0.01" required></label><br>
+    <label>Itens Vendidos: <input type="text" id="itensVendidos" required></label><br>
+    <label>IRPF (%): <input type="number" id="irpf" step="0.01" required></label><br>
+    <label>PIS (%): <input type="number" id="pis" step="0.01" required></label><br>
+    <label>COFINS (%): <input type="number" id="cofins" step="0.01" required></label><br>
+    <label>INSS (%): <input type="number" id="inss" step="0.01" required></label><br>
+    <label>ISSQN (%): <input type="number" id="issqn" step="0.01" required></label><br>
+    <button type="button" onclick="gerarNotaFiscal()">Gerar Nota Fiscal</button>
+  </form>
+
+  <h2>Resultado:</h2>
+  <div id="resultado"></div>
+
+  <script>
+    function gerarNotaFiscal() {
+      const valorVenda = parseFloat(document.getElementById("valorVenda").value);
+      const itensVendidos = document.getElementById("itensVendidos").value;
+      const irpf = parseFloat(document.getElementById("irpf").value);
+      const pis = parseFloat(document.getElementById("pis").value);
+      const cofins = parseFloat(document.getElementById("cofins").value);
+      const inss = parseFloat(document.getElementById("inss").value);
+      const issqn = parseFloat(document.getElementById("issqn").value);
+
+      const calcularImposto = (valor, taxa) => (valor * taxa) / 100;
+
+      const valorIrpf = calcularImposto(valorVenda, irpf);
+      const valorPis = calcularImposto(valorVenda, pis);
+      const valorCofins = calcularImposto(valorVenda, cofins);
+      const valorInss = calcularImposto(valorVenda, inss);
+      const valorIssqn = calcularImposto(valorVenda, issqn);
+      const totalImpostos = valorIrpf + valorPis + valorCofins + valorInss + valorIssqn;
+      const valorLiquido = valorVenda - totalImpostos;
+
+      document.getElementById("resultado").innerHTML = `
+        <p>Valor da Venda: R$ ${valorVenda.toFixed(2)}</p>
+        <p>Itens Vendidos: ${itensVendidos}</p>
+        <p>IRPF: R$ ${valorIrpf.toFixed(2)}</p>
+        <p>PIS: R$ ${valorPis.toFixed(2)}</p>
+        <p>COFINS: R$ ${valorCofins.toFixed(2)}</p>
+        <p>INSS: R$ ${valorInss.toFixed(2)}</p>
+        <p>ISSQN: R$ ${valorIssqn.toFixed(2)}</p>
+        <p>Total de Impostos: R$ ${totalImpostos.toFixed(2)}</p>
+        <p>Valor Líquido: R$ ${valorLiquido.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
